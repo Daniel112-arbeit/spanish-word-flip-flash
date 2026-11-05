@@ -19,16 +19,16 @@ pipeline {
         }
 
         stage('test') {
-            parallel {
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                }
+            }
+            stages {
                 stage('unit tests') {
-                    agent {
-                        docker {
-                            image 'node:22-alpine'
-                            reuseNode true
-                        }
-                    }
                     steps {
-                        // Unit tests with Vitest
+                        // Stellt sicher, dass vitest im neuen Container vorhanden ist
+                        sh 'npm ci'
                         sh 'npx vitest run --reporter=verbose'
                     }
                 }
@@ -42,7 +42,6 @@ pipeline {
                 }
             }
             steps {
-                // Mock deployment which does nothing
                 echo 'Mock deployment was successful!'
             }
         }

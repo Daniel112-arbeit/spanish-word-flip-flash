@@ -71,7 +71,16 @@ pipeline {
             }
             post {
                 always {
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, icon: "", keepAll: false, reportDir: 'reports-e2e/html/', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                    publishHTML([
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: true,
+                            keepAll: false,
+                            reportDir: 'reports-e2e/html/',
+                            reportFiles: 'index.html', // <-- Das hat gefehlt!
+                            reportName: 'Playwright HTML Report',
+                            reportTitles: '',
+                            useWrapperFileDirectly: true
+                    ])
                     junit stdioRetention: 'ALL', testResults: 'reports-e2e/junit.xml'
                 }
             }

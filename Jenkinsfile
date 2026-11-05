@@ -10,7 +10,6 @@ pipeline {
             agent {
                 docker {
                     image 'node:22-alpine'
-                    reuseNode true
                 }
             }
             steps {
@@ -25,11 +24,10 @@ pipeline {
                     agent {
                         docker {
                             image 'node:22-alpine'
-                            reuseNode true
                         }
                     }
                     steps {
-                        // Unit tests with Vitest
+                        sh 'npm ci'
                         sh 'npx vitest run --reporter=verbose'
                     }
                 }
@@ -37,10 +35,10 @@ pipeline {
                     agent {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.54.2-jammy'
-                            reuseNode true
                         }
                     }
                     steps {
+                        sh 'npm ci'
                         sh 'npx playwright test'
                     }
                 }
@@ -54,7 +52,6 @@ pipeline {
                 }
             }
             steps {
-                // Mock deployment which does nothing
                 echo 'Mock deployment was successful!'
             }
         }
@@ -63,13 +60,13 @@ pipeline {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.54.2-jammy'
-                    reuseNode true
                 }
             }
             environment {
                 E2E_BASE_URL = 'https://spanish-cards.netlify.app/'
             }
             steps {
+                sh 'npm ci'
                 sh 'npx playwright test'
             }
             post {
